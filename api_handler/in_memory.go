@@ -10,7 +10,7 @@ import (
 )
 
 func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
-	r.GET("/inmemory/cache/:key", func(c *gin.Context) {
+	r.GET("/inmemory/:key", func(c *gin.Context) {
 		key := c.Param("key")
 		value, found := cache.Get(key)
 		if !found {
@@ -20,12 +20,12 @@ func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
 		c.JSON(http.StatusOK, gin.H{"key": key, "value": value})
 	})
 
-	r.GET("/inmemory/cache", func(c *gin.Context) {
+	r.GET("/inmemory", func(c *gin.Context) {
 		items := cache.GetAll()
 		c.JSON(http.StatusOK, gin.H{"items": items})
 	})
 
-	r.POST("/inmemory/cache", func(c *gin.Context) {
+	r.POST("/inmemory", func(c *gin.Context) {
 		var json struct {
 			Key        string `json:"key"`
 			Value      string `json:"value"`
@@ -39,7 +39,7 @@ func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
 		c.JSON(http.StatusOK, gin.H{"message": "Successfully set value"})
 	})
 
-	r.DELETE("/inmemory/cache/:key", func(c *gin.Context) {
+	r.DELETE("/inmemory/:key", func(c *gin.Context) {
 		key := c.Param("key")
 		if cache.Delete(key) {
 			c.JSON(http.StatusOK, gin.H{"message": "Successfully deleted key"})
@@ -48,7 +48,7 @@ func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
 		}
 	})
 
-	r.DELETE("/inmemory/cache", func(c *gin.Context) {
+	r.DELETE("/inmemory", func(c *gin.Context) {
 		if cache.DeleteAll() {
 			c.JSON(http.StatusOK, gin.H{"message": "Successfully deleted all keys"})
 		} else {

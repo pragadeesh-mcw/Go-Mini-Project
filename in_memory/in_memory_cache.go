@@ -2,7 +2,6 @@ package in_memory
 
 import (
 	"container/list"
-	"fmt"
 	"sync"
 	"time"
 )
@@ -55,7 +54,7 @@ func (c *LRUCache) evictExpired() {
 	now := time.Now().Unix()
 	for key, el := range c.items {
 		if el.Value.(*CacheItem).expiration < now {
-			fmt.Printf("Evicting expired key: %s\n", key)
+			//fmt.Printf("Evicting expired key: %s\n", key)
 			delete(c.items, key)
 			c.order.Remove(el)
 		}
@@ -73,7 +72,7 @@ func (c *LRUCache) Set(key string, value interface{}, expiration time.Duration) 
 		c.order.MoveToFront(el)
 		el.Value.(*CacheItem).value = value
 		el.Value.(*CacheItem).expiration = expirationTime
-		fmt.Printf("Updated key: %s, value: %v, expiration: %d\n", key, value, expirationTime)
+		//fmt.Printf("Updated key: %s, value: %v, expiration: %d\n", key, value, expirationTime)
 		return
 	}
 
@@ -88,7 +87,7 @@ func (c *LRUCache) Set(key string, value interface{}, expiration time.Duration) 
 	}
 	el := c.order.PushFront(item)
 	c.items[key] = el
-	fmt.Printf("Set key: %s, value: %v, expiration: %d\n", key, value, expirationTime)
+	//fmt.Printf("Set key: %s, value: %v, expiration: %d\n", key, value, expirationTime)
 }
 
 func (c *LRUCache) Get(key string) (interface{}, bool) {
@@ -97,19 +96,19 @@ func (c *LRUCache) Get(key string) (interface{}, bool) {
 
 	el, ok := c.items[key]
 	if !ok {
-		fmt.Printf("Get key: %s not found\n", key)
+		//fmt.Printf("Get key: %s not found\n", key)
 		return nil, false
 	}
 
 	now := time.Now().Unix()
 	if el.Value.(*CacheItem).expiration < now {
-		fmt.Printf("Get key: %s expired\n", key)
+		//fmt.Printf("Get key: %s expired\n", key)
 		c.delete(key)
 		return nil, false
 	}
 
 	c.order.MoveToFront(el)
-	fmt.Printf("Get key: %s, value: %v\n", key, el.Value.(*CacheItem).value)
+	//fmt.Printf("Get key: %s, value: %v\n", key, el.Value.(*CacheItem).value)
 	return el.Value.(*CacheItem).value, true
 }
 
@@ -136,10 +135,10 @@ func (c *LRUCache) Delete(key string) bool {
 	if el, ok := c.items[key]; ok {
 		delete(c.items, key)
 		c.order.Remove(el)
-		fmt.Printf("Deleted key: %s\n", key)
+		//fmt.Printf("Deleted key: %s\n", key)
 		return true
 	} else {
-		fmt.Println("Key is not found")
+		//fmt.Println("Key is not found")
 		return false
 	}
 }
@@ -149,13 +148,13 @@ func (c *LRUCache) DeleteAll() bool {
 	defer c.mutex.Unlock()
 
 	if len(c.items) == 0 {
-		fmt.Println("No keys found")
+		//fmt.Println("No keys found")
 		return false
 	}
 
 	c.items = make(map[string]*list.Element)
 	c.order.Init() //delete list
-	fmt.Println("Deleted all keys")
+	//fmt.Println("Deleted all keys")
 	return true
 }
 
@@ -165,7 +164,7 @@ func (c *LRUCache) evict() {
 		c.order.Remove(el)
 		item := el.Value.(*CacheItem)
 		delete(c.items, item.key)
-		fmt.Printf("Evicted key: %s\n", item.key)
+		//fmt.Printf("Evicted key: %s\n", item.key)
 	}
 }
 
