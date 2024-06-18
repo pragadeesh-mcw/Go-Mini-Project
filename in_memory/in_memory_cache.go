@@ -42,7 +42,7 @@ func (c *LRUCache) startEvictionRoutine() {
 		case <-ticker.C: //period cleanup based on cache ttl
 			c.evictExpired()
 		case key := <-c.evictCh:
-			c.delete(key)
+			c.delete(key) //manual eviction
 		}
 	}
 }
@@ -65,7 +65,7 @@ func (c *LRUCache) Set(key string, value interface{}, expiration time.Duration) 
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	expirationTime := time.Now().Unix() + int64(expiration.Seconds())
+	expirationTime := time.Now().Unix() + int64(expiration.Seconds()) //unix time for easier computation
 
 	if el, ok := c.items[key]; ok {
 		//if exists, update existing
@@ -85,7 +85,7 @@ func (c *LRUCache) Set(key string, value interface{}, expiration time.Duration) 
 		value:      value,
 		expiration: expirationTime,
 	}
-	el := c.order.PushFront(item)
+	el := c.order.PushFront(item) //LRU order
 	c.items[key] = el
 	//fmt.Printf("Set key: %s, value: %v, expiration: %d\n", key, value, expirationTime)
 }

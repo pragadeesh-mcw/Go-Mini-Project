@@ -21,14 +21,14 @@ func SetupRedisRoutes(router *gin.Engine, cache *redis.RedisCache) {
 }
 
 type SetRequest struct {
-	Key   string `json:"key" binding:"required"`
+	Key   string `json:"key" binding:"required"` //struct tags
 	Value string `json:"value" binding:"required"`
 	TTL   int    `json:"ttl" binding:"required"`
 }
 
 func setHandler(c *gin.Context) {
 	var req SetRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(&req); err != nil { //bind json data to Go Struct (setRequest)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -11,7 +11,7 @@ import (
 
 func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
 	r.GET("/inmemory/:key", func(c *gin.Context) {
-		key := c.Param("key")
+		key := c.Param("key") //extract key from request
 		value, found := cache.Get(key)
 		if !found {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Key not found"})
@@ -31,7 +31,7 @@ func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
 			Value      string `json:"value"`
 			Expiration int64  `json:"expiration"`
 		}
-		if err := c.ShouldBindJSON(&json); err != nil {
+		if err := c.ShouldBindJSON(&json); err != nil { //bind json with cacheItem struct
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -40,7 +40,7 @@ func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
 	})
 
 	r.DELETE("/inmemory/:key", func(c *gin.Context) {
-		key := c.Param("key")
+		key := c.Param("key") //extract key from request
 		if cache.Delete(key) {
 			c.JSON(http.StatusOK, gin.H{"message": "Successfully deleted key"})
 		} else {

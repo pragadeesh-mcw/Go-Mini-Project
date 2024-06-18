@@ -18,8 +18,8 @@ func setupTestCache() *RedisCache {
 }
 func TestCacheLRUEviction(t *testing.T) {
 	cache := setupTestCache()
-
-	for i := 0; i < 7; i++ {
+	//LRU eviction with step wise check
+	for i := 0; i < 7; i++ { //greater size to check eviction
 		key := "key" + strconv.Itoa(i)
 		err := cache.Set(key, "value"+strconv.Itoa(i), 10*time.Second)
 		if err != nil {
@@ -53,7 +53,7 @@ func TestCacheLRUEviction(t *testing.T) {
 
 func TestCacheLRUUpdateAccessOrder(t *testing.T) {
 	cache := setupTestCache()
-
+	//redis list order check
 	for i := 0; i < 5; i++ {
 		key := "key" + strconv.Itoa(i)
 		err := cache.Set(key, "value"+strconv.Itoa(i), 10*time.Second)

@@ -7,8 +7,10 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+// Empty Context
 var ctx = context.Background()
 
+// Configurable maxsize and redis.Client Initialization
 type RedisCache struct {
 	client  *redis.Client
 	maxSize int
@@ -35,7 +37,7 @@ func (c *RedisCache) Set(key string, value interface{}, ttl time.Duration) error
 		return err
 	}
 
-	c.updateAccessOrder(key)
+	c.updateAccessOrder(key)    //Maintain LRU Order
 	return c.evictIfNecessary() //perform LRU eviction if more than size
 }
 
@@ -55,7 +57,7 @@ func (c *RedisCache) updateAccessOrder(key string) {
 	c.client.LPush(ctx, "cache_keys", key)
 }
 func (c *RedisCache) evictIfNecessary() error {
-	size := c.client.LLen(ctx, "cache_keys").Val()
+	size := c.client.LLen(ctx, "cache_keys").Val() //Redis List length
 	if size > int64(c.maxSize) {
 		excess := size - int64(c.maxSize)
 		for i := int64(0); i < excess; i++ {
@@ -67,7 +69,7 @@ func (c *RedisCache) evictIfNecessary() error {
 }
 
 func (c *RedisCache) GetAll() (map[string]string, error) {
-	keys, err := c.client.LRange(ctx, "cache_keys", 0, -1).Result()
+	keys, err := c.client.LRange(ctx, "cache_keys", 0, -1).Result() //get all elements from list
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +90,7 @@ func (c *RedisCache) Delete(key string) error {
 	if err != nil {
 		return err
 	}
-	c.client.LRem(ctx, "cache_keys", 0, key)
+	c.client.LRem(ctx, "cache_keys", 0, key) //Remove element from list
 	return nil
 }
 
@@ -102,6 +104,6 @@ func (c *RedisCache) DeleteAll() error {
 		c.client.Del(ctx, key)
 	}
 
-	c.client.Del(ctx, "cache_keys")
+	c.client.Del(ctx, "cache_keys") //delete entire list
 	return nil
 }
