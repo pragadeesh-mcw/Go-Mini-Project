@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var cacheInstance *redis.Cache
+var cacheInstance *redis.RedisCache
 
-func SetupRedisRoutes(router *gin.Engine, cache *redis.Cache) {
+func SetupRedisRoutes(router *gin.Engine, cache *redis.RedisCache) {
 	cacheInstance = cache
 
 	router.POST("/redis/", setHandler)

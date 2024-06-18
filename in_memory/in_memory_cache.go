@@ -15,10 +15,10 @@ type CacheItem struct {
 type LRUCache struct {
 	capacity int
 	ttl      int64
-	items    map[string]*list.Element
-	order    *list.List
+	items    map[string]*list.Element //HashMap for kvp
+	order    *list.List               //DLL for LRU order
 	mutex    sync.Mutex
-	evictCh  chan string
+	evictCh  chan string //manual key eviction
 }
 
 func NewLRUCache(capacity int, ttl int64) *LRUCache {
@@ -39,7 +39,7 @@ func (c *LRUCache) startEvictionRoutine() {
 
 	for {
 		select {
-		case <-ticker.C:
+		case <-ticker.C: //period cleanup based on cache ttl
 			c.evictExpired()
 		case key := <-c.evictCh:
 			c.delete(key)
@@ -122,7 +122,7 @@ func (c *LRUCache) GetAll() map[string]interface{} {
 		if el.Value.(*CacheItem).expiration >= now {
 			result[key] = el.Value.(*CacheItem).value
 		} else {
-			go func(k string) { c.evictCh <- k }(key) //startEvictionRotine
+			go func(k string) { c.evictCh <- k }(key) //startEvictionRoutine
 		}
 	}
 	return result

@@ -11,7 +11,7 @@ import (
 
 var benchCtx = context.Background()
 
-func setupBenchmarkCache() *Cache {
+func setupBenchmarkCache() *RedisCache {
 	client := redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 		DB:   0,

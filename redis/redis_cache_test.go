@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func setupTestCache() *Cache {
+func setupTestCache() *RedisCache {
 	client := redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 		DB:   0,

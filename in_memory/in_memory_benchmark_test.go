@@ -39,7 +39,7 @@ func BenchmarkLRUCacheConcurrentSet(b *testing.B) {
 		wg.Add(1)
 		go func(idx int) {
 			defer wg.Done()
-			key := "key" + strconv.Itoa(i)
+			key := "key" + strconv.Itoa(idx)
 			cache.Set(key, idx, 60)
 		}(i)
 	}
