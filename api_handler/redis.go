@@ -13,11 +13,11 @@ var cacheInstance *redis.Cache
 func SetupRedisRoutes(router *gin.Engine, cache *redis.Cache) {
 	cacheInstance = cache
 
-	router.POST("/redis", setHandler)
-	router.GET("/redis/get", getHandler)
-	router.GET("/redis", getAllHandler)
+	router.POST("/redis/", setHandler)
+	router.GET("/redis/:key", getHandler)
+	router.GET("/redis/", getAllHandler)
 	router.DELETE("/redis/:key", deleteHandler)
-	router.DELETE("/redis", deleteAllHandler)
+	router.DELETE("/redis/", deleteAllHandler)
 }
 
 type SetRequest struct {
@@ -38,14 +38,14 @@ func setHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Key set successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Key set"})
 }
 
 func getHandler(c *gin.Context) {
-	key := c.Query("key")
+	key := c.Param("key")
 	value, err := cacheInstance.Get(key)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Key not found"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"key": key, "value": value})
@@ -61,13 +61,13 @@ func getAllHandler(c *gin.Context) {
 }
 
 func deleteHandler(c *gin.Context) {
-	key := c.Query("key")
+	key := c.Param("key")
 	err := cacheInstance.Delete(key)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Key deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Key deleted "})
 }
 
 func deleteAllHandler(c *gin.Context) {
@@ -76,5 +76,5 @@ func deleteAllHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "All keys deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "All keys deleted"})
 }
