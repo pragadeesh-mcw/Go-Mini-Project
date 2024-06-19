@@ -4,7 +4,7 @@
 
 This project implements an LRU (Least Recently Used) cache with both in-memory and Redis, including TTL (Time-to-Live) functionality.  
 
-The cache operations available are *__set__*, *__get__*, *__getall__*, *__delete__*, *__deleteall__*, accessed by POST, GET and DELETE HTTP methods.  
+The cache operations available are __set__, __get__, __getall__, __delete__, __deleteall__, accessed by POST, GET and DELETE HTTP methods.  
 
 It allows for concurrent get and set operations on the cache as well.  
 
