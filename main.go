@@ -9,8 +9,8 @@ import (
 
 func main() {
 	//initiate redis and in-memory
-	inMemoryCache := in_memory.NewLRUCache(100, 60)
-	redisCache := redis.NewCache("localhost:6379", "", 0, 100)
+	inMemoryCache := in_memory.NewLRUCache(3, 60)
+	redisCache := redis.NewCache("localhost:6379", "", 0, 3)
 	multiCache := multicache.NewMultiCache(inMemoryCache, redisCache)
 	//setup unified api
 	r := api.SetupRouter(multiCache)
