@@ -1,23 +1,24 @@
-package redis
+package test
 
 import (
 	"context"
 	"strconv"
 	"testing"
 	"time"
+	"unified/redis_cache"
 
 	"github.com/redis/go-redis/v9"
 )
 
 var benchCtx = context.Background()
 
-func setupBenchmarkCache() *RedisCache {
+func setupBenchmarkCache() *redis_cache.RedisCache {
 	client := redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 		DB:   0,
 	})
 	client.FlushDB(benchCtx) //start with empty redis
-	return NewCache("localhost:6379", "", 0, 1000)
+	return redis_cache.NewCache("localhost:6379", "", 0, 1000)
 }
 
 func BenchmarkCacheSet(b *testing.B) {
@@ -78,7 +79,7 @@ func BenchmarkCacheGetAll(b *testing.B) {
 
 func BenchmarkCacheLRUEviction(b *testing.B) {
 	cache := setupBenchmarkCache()
-	cache.maxSize = 100 // Set a small maxsize to trigger evictions during benchmark as maxsize is 1000
+	cache.MaxSize = 100 // Set a small maxsize to trigger evictions during benchmark as maxsize is 1000
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {

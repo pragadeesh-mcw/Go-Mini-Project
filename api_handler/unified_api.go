@@ -45,7 +45,7 @@ func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "get success", "key": key, "value": value})
+		c.JSON(http.StatusOK, gin.H{"key": key, "value": value})
 	})
 	//GETALL
 	r.GET("/cache", func(c *gin.Context) {
@@ -55,7 +55,7 @@ func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "get all success", "values": values})
+		c.JSON(http.StatusOK, gin.H{"values": values})
 	})
 	//DELETE
 	r.DELETE("/cache/:key", func(c *gin.Context) {

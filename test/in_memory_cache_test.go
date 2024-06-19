@@ -1,11 +1,12 @@
-package in_memory
+package test
 
 import (
 	"testing"
+	inmemory "unified/in_memory"
 )
 
 func TestLRUCache(t *testing.T) {
-	cache := NewLRUCache(3, 60)
+	cache := inmemory.NewLRUCache(3, 60)
 
 	cache.Set("key1", "value1", 10)
 	cache.Set("key2", "value2", 20)

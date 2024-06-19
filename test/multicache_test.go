@@ -1,18 +1,19 @@
-package multicache
+package test
 
 import (
 	"testing"
 	"time"
 
 	"unified/in_memory"
-	"unified/redis"
+	"unified/multicache"
+	"unified/redis_cache"
 )
 
 func TestMultiCache(t *testing.T) {
 	inMemoryCache := in_memory.NewLRUCache(100, 60)
-	redisCache := redis.NewCache("localhost:6379", "", 0, 100)
+	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 100)
 
-	cache := NewMultiCache(inMemoryCache, redisCache)
+	cache := multicache.NewMultiCache(inMemoryCache, redisCache)
 
 	key := "test-key"
 	value := "test-value"

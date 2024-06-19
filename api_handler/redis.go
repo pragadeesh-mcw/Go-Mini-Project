@@ -3,14 +3,14 @@ package api_handler
 import (
 	"net/http"
 	"time"
-	"unified/redis"
+	"unified/redis_cache"
 
 	"github.com/gin-gonic/gin"
 )
 
-var cacheInstance *redis.RedisCache
+var cacheInstance *redis_cache.RedisCache
 
-func SetupRedisRoutes(router *gin.Engine, cache *redis.RedisCache) {
+func SetupRedisRoutes(router *gin.Engine, cache *redis_cache.RedisCache) {
 	cacheInstance = cache
 
 	router.POST("/redis/", setHandler)

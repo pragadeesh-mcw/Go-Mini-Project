@@ -1,4 +1,4 @@
-package multicache
+package test
 
 import (
 	"strconv"
@@ -6,14 +6,15 @@ import (
 	"time"
 
 	"unified/in_memory"
-	"unified/redis"
+	"unified/multicache"
+	"unified/redis_cache"
 )
 
 func BenchmarkMultiCacheSet(b *testing.B) {
 	inMemoryCache := in_memory.NewLRUCache(100, 60)
-	redisCache := redis.NewCache("localhost:6379", "", 0, 100)
+	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 100)
 
-	cache := NewMultiCache(inMemoryCache, redisCache)
+	cache := multicache.NewMultiCache(inMemoryCache, redisCache)
 
 	key := "test-key"
 	value := "test-value"
@@ -29,9 +30,9 @@ func BenchmarkMultiCacheSet(b *testing.B) {
 
 func BenchmarkMultiCacheGet(b *testing.B) {
 	inMemoryCache := in_memory.NewLRUCache(100, 60)
-	redisCache := redis.NewCache("localhost:6379", "", 0, 100)
+	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 100)
 
-	cache := NewMultiCache(inMemoryCache, redisCache)
+	cache := multicache.NewMultiCache(inMemoryCache, redisCache)
 
 	key := "test-key"
 	value := "test-value"
@@ -54,9 +55,9 @@ func BenchmarkMultiCacheGet(b *testing.B) {
 
 func BenchmarkMultiCacheGetAll(b *testing.B) {
 	inMemoryCache := in_memory.NewLRUCache(100, 60)
-	redisCache := redis.NewCache("localhost:6379", "", 0, 100)
+	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 100)
 
-	cache := NewMultiCache(inMemoryCache, redisCache)
+	cache := multicache.NewMultiCache(inMemoryCache, redisCache)
 
 	for i := 0; i < 100; i++ {
 		key := "test-key" + strconv.Itoa(i)
@@ -80,9 +81,9 @@ func BenchmarkMultiCacheGetAll(b *testing.B) {
 }
 func BenchmarkMultiCacheDelete(b *testing.B) {
 	inMemoryCache := in_memory.NewLRUCache(100, 60)
-	redisCache := redis.NewCache("localhost:6379", "", 0, 100)
+	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 100)
 
-	cache := NewMultiCache(inMemoryCache, redisCache)
+	cache := multicache.NewMultiCache(inMemoryCache, redisCache)
 
 	key := "test-key"
 	value := "test-value"
@@ -106,9 +107,9 @@ func BenchmarkMultiCacheDelete(b *testing.B) {
 
 func BenchmarkMultiCacheDeleteAll(b *testing.B) {
 	inMemoryCache := in_memory.NewLRUCache(100, 60)
-	redisCache := redis.NewCache("localhost:6379", "", 0, 100)
+	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 100)
 
-	cache := NewMultiCache(inMemoryCache, redisCache)
+	cache := multicache.NewMultiCache(inMemoryCache, redisCache)
 
 	for i := 0; i < 100; i++ {
 		key := "test-key" + strconv.Itoa(i)

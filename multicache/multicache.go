@@ -4,15 +4,15 @@ import (
 	"time"
 
 	"unified/in_memory"
-	"unified/redis"
+	"unified/redis_cache"
 )
 
 type MultiCache struct {
 	inMemoryCache *in_memory.LRUCache
-	redisCache    *redis.RedisCache
+	redisCache    *redis_cache.RedisCache
 }
 
-func NewMultiCache(inMemoryCache *in_memory.LRUCache, redisCache *redis.RedisCache) *MultiCache {
+func NewMultiCache(inMemoryCache *in_memory.LRUCache, redisCache *redis_cache.RedisCache) *MultiCache {
 	return &MultiCache{
 		inMemoryCache: inMemoryCache,
 		redisCache:    redisCache,

@@ -1,13 +1,14 @@
-package in_memory
+package test
 
 import (
 	"strconv"
 	"sync"
 	"testing"
+	inmemory "unified/in_memory"
 )
 
 func BenchmarkLRUCacheSet(b *testing.B) {
-	cache := NewLRUCache(1000, 60)
+	cache := inmemory.NewLRUCache(1000, 60)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -17,7 +18,7 @@ func BenchmarkLRUCacheSet(b *testing.B) {
 }
 
 func BenchmarkLRUCacheGet(b *testing.B) {
-	cache := NewLRUCache(1000, 60)
+	cache := inmemory.NewLRUCache(1000, 60)
 	for i := 0; i < 1000; i++ {
 		key := "key" + strconv.Itoa(i)
 		cache.Set(key, i, 60)
@@ -31,7 +32,7 @@ func BenchmarkLRUCacheGet(b *testing.B) {
 }
 
 func BenchmarkLRUCacheConcurrentSet(b *testing.B) {
-	cache := NewLRUCache(1000, 60)
+	cache := inmemory.NewLRUCache(1000, 60)
 	var wg sync.WaitGroup
 	b.ResetTimer()
 
@@ -47,7 +48,7 @@ func BenchmarkLRUCacheConcurrentSet(b *testing.B) {
 }
 
 func BenchmarkLRUCacheConcurrentGet(b *testing.B) {
-	cache := NewLRUCache(1000, 60)
+	cache := inmemory.NewLRUCache(1000, 60)
 	for i := 0; i < 1000; i++ {
 		key := "key" + strconv.Itoa(i)
 		cache.Set(key, i, 60)

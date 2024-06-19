@@ -1,22 +1,26 @@
-package redis
+package test
 
 import (
+	"context"
 	"strconv"
 	"testing"
 	"time"
+	"unified/redis_cache"
 
 	"github.com/redis/go-redis/v9"
 )
 
-func setupTestCache() *RedisCache {
+var ctx = context.Background()
+
+func setupTestCache() *redis_cache.RedisCache {
 	client := redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 		DB:   0,
 	})
 	client.FlushDB(ctx)
-	return NewCache("localhost:6379", "", 0, 5)
+	return redis_cache.NewCache("localhost:6379", "", 0, 5)
 }
-func TestCacheLRUEviction(t *testing.T) {
+func TestRedisLRUEviction(t *testing.T) {
 	cache := setupTestCache()
 	//LRU eviction with step wise check
 	for i := 0; i < 7; i++ { //greater size to check eviction
@@ -28,7 +32,7 @@ func TestCacheLRUEviction(t *testing.T) {
 	}
 
 	expectedKeys := []string{"key6", "key5", "key4", "key3", "key2"}
-	actualKeys, err := cache.client.LRange(ctx, "cache_keys", 0, -1).Result()
+	actualKeys, err := cache.Client.LRange(ctx, "cache_keys", 0, -1).Result()
 	if err != nil {
 		t.Fatalf("Failed to get keys: %v", err)
 	}
@@ -51,7 +55,7 @@ func TestCacheLRUEviction(t *testing.T) {
 	}
 }
 
-func TestCacheLRUUpdateAccessOrder(t *testing.T) {
+func TestRedisLRUUpdateAccessOrder(t *testing.T) {
 	cache := setupTestCache()
 	//redis list order check
 	for i := 0; i < 5; i++ {
@@ -66,7 +70,7 @@ func TestCacheLRUUpdateAccessOrder(t *testing.T) {
 	cache.Set("key5", "value5", 10*time.Second)
 
 	expectedKeys := []string{"key5", "key0", "key4", "key3", "key2"}
-	actualKeys, err := cache.client.LRange(ctx, "cache_keys", 0, -1).Result()
+	actualKeys, err := cache.Client.LRange(ctx, "cache_keys", 0, -1).Result()
 	if err != nil {
 		t.Fatalf("Failed to get keys: %v", err)
 	}
@@ -86,7 +90,7 @@ func TestCacheLRUUpdateAccessOrder(t *testing.T) {
 		t.Errorf("Expected key 'key1' to be evicted, but it is still present")
 	}
 }
-func TestCacheSetGet(t *testing.T) {
+func TestRedisSetGet(t *testing.T) {
 	cache := setupTestCache()
 
 	err := cache.Set("key1", "value1", 10*time.Second)
@@ -103,7 +107,7 @@ func TestCacheSetGet(t *testing.T) {
 		t.Errorf("Expected 'value1', got '%s'", val)
 	}
 }
-func TestCacheDelete(t *testing.T) {
+func TestRedisDelete(t *testing.T) {
 	cache := setupTestCache()
 
 	err := cache.Set("key1", "value1", 10*time.Second)
@@ -122,7 +126,7 @@ func TestCacheDelete(t *testing.T) {
 	}
 }
 
-func TestCacheGetAll(t *testing.T) {
+func TestRedisGetAll(t *testing.T) {
 	cache := setupTestCache()
 
 	for i := 0; i < 5; i++ {
@@ -143,7 +147,7 @@ func TestCacheGetAll(t *testing.T) {
 	}
 }
 
-func TestCacheDeleteAll(t *testing.T) {
+func TestRedisDeleteAll(t *testing.T) {
 	cache := setupTestCache()
 
 	for i := 0; i < 5; i++ {
