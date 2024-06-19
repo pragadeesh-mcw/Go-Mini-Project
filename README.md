@@ -60,8 +60,6 @@ Install the dependencies by running:
 
 ### Base URL
 
-bash
-Copy code
 http://localhost:8080/cache
 
 ### Endpoints
@@ -82,8 +80,7 @@ Copy code
 
 *   **Response:**
 
-json
-Copy code
+
 {
   "message": "Key-Value pair set successfully"
 }
@@ -94,8 +91,7 @@ Copy code
 *   **Method:** `GET`
 *   **Response:**
 
-json
-Copy code
+
 {
   "value": "your-value"
 }
