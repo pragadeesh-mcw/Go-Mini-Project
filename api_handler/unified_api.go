@@ -29,7 +29,7 @@ func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "key added"})
+		c.JSON(http.StatusOK, gin.H{"status": "Key-Value pair set successfully"})
 	})
 	//GET
 	r.GET("/cache/:key", func(c *gin.Context) {
@@ -41,7 +41,7 @@ func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
 		}
 
 		if value == nil {
-			c.JSON(http.StatusNotFound, gin.H{"status": "not found"})
+			c.JSON(http.StatusNotFound, gin.H{"status": "Key not found"})
 			return
 		}
 
@@ -65,7 +65,7 @@ func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "key deleted"})
+		c.JSON(http.StatusOK, gin.H{"status": "Key deleted successfully"})
 	})
 	//DELETEALL
 	r.DELETE("/cache", func(c *gin.Context) {
@@ -74,7 +74,7 @@ func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "All keys deleted"})
+		c.JSON(http.StatusOK, gin.H{"status": "All keys deleted successfully"})
 	})
 
 	return r

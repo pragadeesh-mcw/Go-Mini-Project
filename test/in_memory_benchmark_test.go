@@ -2,68 +2,62 @@ package test
 
 import (
 	"strconv"
-	"sync"
 	"testing"
+	"time"
 	inmemory "unified/in_memory"
 )
 
-func BenchmarkLRUCacheSet(b *testing.B) {
-	cache := inmemory.NewLRUCache(1000, 60)
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		key := "key" + strconv.Itoa(i)
-		cache.Set(key, i, 60)
+func BenchmarkLRUCache_Set(b *testing.B) {
+	cache := inmemory.NewLRUCache(1000, 5)
+	for n := 0; n < b.N; n++ {
+		cache.Set("key"+strconv.Itoa(n), "value"+strconv.Itoa(n), 10*time.Second)
 	}
 }
 
-func BenchmarkLRUCacheGet(b *testing.B) {
-	cache := inmemory.NewLRUCache(1000, 60)
-	for i := 0; i < 1000; i++ {
-		key := "key" + strconv.Itoa(i)
-		cache.Set(key, i, 60)
+func BenchmarkLRUCache_Get(b *testing.B) {
+	cache := inmemory.NewLRUCache(1000, 5)
+	for n := 0; n < 1000; n++ {
+		cache.Set("key"+strconv.Itoa(n), "value"+strconv.Itoa(n), 10*time.Second)
 	}
 
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		key := "key" + strconv.Itoa(i%1000)
-		cache.Get(key)
+	for n := 0; n < b.N; n++ {
+		cache.Get("key" + strconv.Itoa(n%1000))
 	}
 }
 
-func BenchmarkLRUCacheConcurrentSet(b *testing.B) {
-	cache := inmemory.NewLRUCache(1000, 60)
-	var wg sync.WaitGroup
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		wg.Add(1)
-		go func(idx int) {
-			defer wg.Done()
-			key := "key" + strconv.Itoa(idx)
-			cache.Set(key, idx, 60)
-		}(i)
+func BenchmarkLRUCache_Delete(b *testing.B) {
+	cache := inmemory.NewLRUCache(1000, 5)
+	for n := 0; n < 1000; n++ {
+		cache.Set("key"+strconv.Itoa(n), "value"+strconv.Itoa(n), 10*time.Second)
 	}
-	wg.Wait()
+
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		cache.Delete("key" + strconv.Itoa(n%1000))
+	}
 }
 
-func BenchmarkLRUCacheConcurrentGet(b *testing.B) {
-	cache := inmemory.NewLRUCache(1000, 60)
-	for i := 0; i < 1000; i++ {
-		key := "key" + strconv.Itoa(i)
-		cache.Set(key, i, 60)
+func BenchmarkLRUCache_GetAll(b *testing.B) {
+	cache := inmemory.NewLRUCache(1000, 5)
+	for n := 0; n < 1000; n++ {
+		cache.Set("key"+strconv.Itoa(n), "value"+strconv.Itoa(n), 10*time.Second)
 	}
 
-	var wg sync.WaitGroup
 	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		wg.Add(1)
-		go func(idx int) {
-			defer wg.Done()
-			key := "key" + strconv.Itoa(idx%1000)
-			cache.Get(key)
-		}(i)
+	for n := 0; n < b.N; n++ {
+		cache.GetAll()
 	}
-	wg.Wait()
+}
+
+func BenchmarkLRUCache_DeleteAll(b *testing.B) {
+	cache := inmemory.NewLRUCache(1000, 5)
+	for n := 0; n < 1000; n++ {
+		cache.Set("key"+strconv.Itoa(n), "value"+strconv.Itoa(n), 10*time.Second)
+	}
+
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		cache.DeleteAll()
+	}
 }
