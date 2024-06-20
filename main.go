@@ -7,7 +7,7 @@ import (
 	"unified/redis_cache"
 )
 
-func main() {
+func entry() {
 	//initiate redis and in-memory
 	inMemoryCache := in_memory.NewLRUCache(3, 60)
 	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 3)
