@@ -16,7 +16,7 @@ It also includes benchmarking, testing, and API endpoints implemented with the G
 ### Prerequisites
 
 *   Go
-*   Redis server
+*   Redis
 *   Postman
 
 ### Steps
@@ -25,9 +25,8 @@ It also includes benchmarking, testing, and API endpoints implemented with the G
 >      git clone https://github.com/pragadeesh-mcw/Go-Mini-Project.git  
 >      cd Go-Mini-Project
 
- -  Install dependencies:
-The dependencies of this library are:
->   Go-Redis v9
+ -  Install dependencies:  
+>   Go-Redis v9  
 >   Gin Framework
 
 - Install the dependencies by running:  
@@ -98,7 +97,7 @@ To benchmark the performance of the LRU cache:
 ### Running Tests
 To run the tests:  
 `cd test`  
-`go test ` 
+`go test` 
 
 ## Configuration
 
