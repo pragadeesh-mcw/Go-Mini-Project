@@ -3,11 +3,13 @@ package api_handler
 import (
 	"net/http"
 	"time"
-	"unified/redis_cache"
+
+	"github.com/pragadeesh-mcw/Go-Mini-Project/redis_cache"
 
 	"github.com/gin-gonic/gin"
 )
 
+// FOR REDIS ONLY INTERACTION
 var cacheInstance *redis_cache.RedisCache
 
 func SetupRedisRoutes(router *gin.Engine, cache *redis_cache.RedisCache) {

@@ -1,4 +1,4 @@
-module unified
+module github.com/pragadeesh-mcw/Go-Mini-Project
 
 go 1.22.3
 

@@ -5,7 +5,8 @@ import (
 	"strconv"
 	"testing"
 	"time"
-	"unified/redis_cache"
+
+	"github.com/pragadeesh-mcw/Go-Mini-Project/redis_cache"
 
 	"github.com/redis/go-redis/v9"
 )

@@ -3,8 +3,8 @@ package multicache
 import (
 	"time"
 
-	"unified/in_memory"
-	"unified/redis_cache"
+	"github.com/pragadeesh-mcw/Go-Mini-Project/in_memory"
+	"github.com/pragadeesh-mcw/Go-Mini-Project/redis_cache"
 )
 
 type MultiCache struct {

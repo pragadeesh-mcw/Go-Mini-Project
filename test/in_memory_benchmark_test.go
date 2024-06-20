@@ -4,7 +4,8 @@ import (
 	"strconv"
 	"sync"
 	"testing"
-	inmemory "unified/in_memory"
+
+	inmemory "github.com/pragadeesh-mcw/Go-Mini-Project/in_memory"
 )
 
 func BenchmarkLRUCacheSet(b *testing.B) {

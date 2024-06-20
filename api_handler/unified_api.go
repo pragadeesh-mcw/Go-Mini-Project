@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"time"
 
-	"unified/multicache"
+	"github.com/pragadeesh-mcw/Go-Mini-Project/multicache"
 
 	"github.com/gin-gonic/gin"
 )
 
+// Unified Router
 func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
 	r := gin.Default()
 	//SET

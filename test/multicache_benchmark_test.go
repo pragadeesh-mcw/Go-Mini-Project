@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"unified/in_memory"
-	"unified/multicache"
-	"unified/redis_cache"
+	"github.com/pragadeesh-mcw/Go-Mini-Project/in_memory"
+	"github.com/pragadeesh-mcw/Go-Mini-Project/multicache"
+	"github.com/pragadeesh-mcw/Go-Mini-Project/redis_cache"
 )
 
 func BenchmarkMultiCacheSet(b *testing.B) {

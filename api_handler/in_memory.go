@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"time"
 
-	"unified/in_memory"
+	"github.com/pragadeesh-mcw/Go-Mini-Project/in_memory"
 
 	"github.com/gin-gonic/gin"
 )
 
+// FOR IN_MEMORY ONLY INTERACTION
 func SetupInMemoryRoutes(r *gin.Engine, cache in_memory.Cache) {
 	r.GET("/inmemory/:key", func(c *gin.Context) {
 		key := c.Param("key") //extract key from request

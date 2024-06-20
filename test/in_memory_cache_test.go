@@ -2,7 +2,8 @@ package test
 
 import (
 	"testing"
-	inmemory "unified/in_memory"
+
+	inmemory "github.com/pragadeesh-mcw/Go-Mini-Project/in_memory"
 )
 
 func TestLRUCache(t *testing.T) {
