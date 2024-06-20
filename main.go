@@ -1,4 +1,4 @@
-package main
+package Go-Mini-Project
 
 import (
 	api "github.com/pragadeesh-mcw/Go-Mini-Project/api_handler"
