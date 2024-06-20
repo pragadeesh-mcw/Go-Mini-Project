@@ -1,4 +1,4 @@
-module github.com/pragadeesh-mcw/Go-Mini-Project
+module github.com/pragadeesh-mcw/Go-Mini-Project/cache
 
 go 1.22.3
 
