@@ -1,4 +1,4 @@
-package github.com/pragadeesh-mcw/Go-Mini-Project/cache
+package cache
 
 import (
 	api "github.com/pragadeesh-mcw/Go-Mini-Project/api_handler"
