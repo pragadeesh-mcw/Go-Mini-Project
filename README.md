@@ -1,3 +1,4 @@
+
 # LRU Cache - Redis and In-Memory Library
 
 ## Overview
@@ -10,15 +11,6 @@ It allows for concurrent get and set operations on the cache as well.
 
 It also includes benchmarking, testing, and API endpoints implemented with the Gin framework. Postman is used for testing the API.  
 
-## Table of Contents
-
-*   [Installation](#installation)
-*   [Usage](#usage)
-*   [API Endpoints](#api-endpoints)
-*   [Benchmarking](#benchmarking)
-*   [Testing](#testing)
-*   [Configuration](#configuration)
-
 ## Installation
 
 ### Prerequisites
@@ -29,22 +21,20 @@ It also includes benchmarking, testing, and API endpoints implemented with the G
 
 ### Steps
 
-1.  Clone the repository:
+ -  Clone the repository:
+>      git clone https://github.com/pragadeesh-mcw/Go-Mini-Project.git  
+>      cd Go-Mini-Project
 
-`git clone https://github.com/pragadeesh-mcw/Go-Mini-Project.git`
-
-`cd Go-Mini-Project`
-
-1.  Install dependencies:
+ -  Install dependencies:
 The dependencies of this library are:
-* Go-Redis v9
-* Gin Framework  
-Install the dependencies by running:
-``go mod tidy``
+>   Go-Redis v9
+>   Gin Framework
 
-1.  Start Redis server:
-
-``redis-server``
+- Install the dependencies by running:  
+>      go mod tidy
+	
+ -  Start Redis server:
+>      redis-server
 
 ## Usage
 
@@ -52,9 +42,9 @@ Install the dependencies by running:
 
 1.  Build and run the application:
 
-`go run main.go`
+	`go run main.go`
 
-1.  The application will start on the default port `8080`. You can change the port in the configuration file.
+1.  The application will start on the default port `8080`. 
 
 ## API Endpoints
 
@@ -68,64 +58,54 @@ http://localhost:8080/cache
 
 *   **URL:** `/cache`
 *   **Method:** `POST`
-*   **Request Body:**
-
-{
-  "key": "your-key",
-  "value": "your-value",
-  "ttl": 60 // TTL in seconds
-}
-
-*   **Response:**
-{
-  "message": "Key-Value pair set successfully"
-}
+*   **Request Body:** `{ key": "your-key", "value": "your-value", "ttl": 60 }`  
+>   TTL in seconds
+*   **Response:** `{ "message": "Key-Value pair set successfully" }`
 
 #### Get Value by Key
 
 *   **URL:** `/cache/:key`
 *   **Method:** `GET`
-*   **Response:**
+*   **Response:** `{ "key": "your-key", "value": "your-value" }`
 
-
-{
-  "value": "your-value"
-}
+#### Get All Keys
+*   **URL:** `/cache/:key`
+*   **Method:** `GET`
+*   **Response:** `{ "Key-Value Pairs": { key1: value1, key2:value2 } }`
 
 #### Delete Key
 
 *   **URL:** `/cache/:key`
 *   **Method:** `DELETE`
-*   **Response:**
+*   **Response:** `Key deleted successfully` 
 
-{
-  "message": "Key deleted successfully"
-}
+#### Delete All Keys
+*   **URL:** `/cache/`
+*   **Method:** `DELETE`
+*   **Response:** : `All keys deleted successfully` 
+
+The same operations can be performed individually for redis and in-memory cache at 
+`/redis/`  and `/inmemory/` respectively.
 
 ## Benchmarking
-
 To benchmark the performance of the LRU cache:
-
 1.  Run the benchmark tests:
-
     `go test -bench=.`
-
 1.  The results will show the performance of different operations in the cache.
 
 ## Testing
 
 ### Running Tests
-
 To run the tests:  
 `cd test`  
-`go test ./...` 
+`go test ` 
 
 ## Configuration
 
-Configuration is done via environment variables or a configuration file. The following options are available:
-
+Configuration for TTL and max cache size is done via POST.  
+The default configuration is:
 *   `REDIS_ADDR`: Address of the Redis server (default: `localhost:6379`).
 *   `REDIS_PASSWORD`: Password for the Redis server (default: `""`).
 *   `REDIS_DB`: Redis database number (default: `0`).
-*   `SIZE`: Default size is 3.
-*   `TTL`: Default TTL is 60 seconds.
+*   `SIZE`: Default size is `3`.
+*   `TTL`: Default TTL is `60` seconds.
