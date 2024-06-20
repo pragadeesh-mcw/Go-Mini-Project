@@ -131,3 +131,5 @@ Configuration is done via environment variables or a configuration file. The fol
 *   `REDIS_ADDR`: Address of the Redis server (default: `localhost:6379`).
 *   `REDIS_PASSWORD`: Password for the Redis server (default: `""`).
 *   `REDIS_DB`: Redis database number (default: `0`).
+*   `SIZE`: Default size is 3.
+*   `TTL`: Default TTL is 60 seconds.
