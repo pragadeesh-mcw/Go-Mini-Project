@@ -70,8 +70,6 @@ http://localhost:8080/cache
 *   **Method:** `POST`
 *   **Request Body:**
 
-json
-Copy code
 {
   "key": "your-key",
   "value": "your-value",
@@ -79,8 +77,6 @@ Copy code
 }
 
 *   **Response:**
-
-
 {
   "message": "Key-Value pair set successfully"
 }
