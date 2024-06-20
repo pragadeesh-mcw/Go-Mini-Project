@@ -1,4 +1,4 @@
-package cache
+package main
 
 import (
 	api "github.com/pragadeesh-mcw/Go-Mini-Project/api_handler"
@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func entry() *gin.Engine {
+func Entry() *gin.Engine {
 	//initiate redis and in-memory
 	inMemoryCache := in_memory.NewLRUCache(3, 60)
 	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 3)
