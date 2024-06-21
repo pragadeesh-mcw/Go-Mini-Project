@@ -10,26 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GinEngines struct {
-	R  *gin.Engine
-	R1 *gin.Engine
-}
-
-func Entry() *GinEngines {
+func Entry() *gin.Engine {
 	inMemoryCache := in_memory.NewLRUCache(3, 60)
 	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 3)
 	multiCache := multicache.NewMultiCache(inMemoryCache, redisCache)
 
 	// Setup unified API
-	r1 := gin.Default()
-	api.SetupInMemoryRoutes(r1, inMemoryCache)
-	api.SetupRedisRoutes(r1, redisCache)
-
-	r := gin.Default()
-	api.SetupUnifiedRoutes(multiCache)
-
-	return &GinEngines{
-		R:  r,
-		R1: r1,
-	}
+	r:=api.SetupUnifiedRoutes(multiCache)
+	return r
 }
