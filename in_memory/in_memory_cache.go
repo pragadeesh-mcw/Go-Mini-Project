@@ -42,7 +42,7 @@ func (c *LRUCache) startEvictionRoutine() {
 		case <-ticker.C: //period cleanup based on cache ttl
 			c.evictExpired()
 		case key := <-c.evictCh:
-			c.delete(key) //manual eviction
+			c.deletekey(key) //manual eviction
 		}
 	}
 }
@@ -62,9 +62,11 @@ func (c *LRUCache) evictExpired() {
 }
 
 func (c *LRUCache) Set(key string, value interface{}, expiration time.Duration) {
+	if expiration == 0 {
+		return
+	}
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-
 	expirationTime := time.Now().Unix() + int64(expiration.Seconds()) //unix time for easier computation
 
 	if el, ok := c.items[key]; ok {
@@ -103,7 +105,7 @@ func (c *LRUCache) Get(key string) (interface{}, bool) {
 	now := time.Now().Unix()
 	if el.Value.(*CacheItem).expiration < now {
 		//fmt.Printf("Get key: %s expired\n", key)
-		c.delete(key)
+		c.deletekey(key)
 		return nil, false
 	}
 
@@ -168,7 +170,7 @@ func (c *LRUCache) evict() {
 	}
 }
 
-func (c *LRUCache) delete(key string) {
+func (c *LRUCache) deletekey(key string) {
 	if el, ok := c.items[key]; ok {
 		delete(c.items, key) //map delete builtin
 		c.order.Remove(el)

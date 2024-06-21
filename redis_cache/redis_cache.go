@@ -2,6 +2,7 @@ package redis_cache
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -32,6 +33,12 @@ func NewCache(addr string, password string, db int, maxSize int) *RedisCache {
 
 // REDIS LRU OPERATION METHODS
 func (c *RedisCache) Set(key string, value interface{}, ttl time.Duration) error {
+	if key == "" {
+		return errors.New("key cannot be empty")
+	}
+	if ttl == 0 {
+		return errors.New("ttl cannot be zero")
+	}
 	err := c.Client.Set(ctx, key, value, ttl).Err()
 	if err != nil {
 		return err

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(multiCache *multicache.MultiCache) *gin.Engine {
+func SetupUnifiedRoutes(multiCache *multicache.MultiCache) *gin.Engine {
 	r := gin.Default()
 	//SET
 	r.POST("/cache", func(c *gin.Context) {

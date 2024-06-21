@@ -1,6 +1,7 @@
 package multicache
 
 import (
+	"reflect"
 	"time"
 
 	"unified/in_memory"
@@ -31,19 +32,16 @@ func (c *MultiCache) Set(key string, value interface{}, ttl time.Duration) error
 
 func (c *MultiCache) Get(key string) (interface{}, error) {
 	// Try to get from in-memory cache first
-	if value, found := c.inMemoryCache.Get(key); found {
-		return value, nil
-	}
+	value1, _ := c.inMemoryCache.Get(key)
+	value2, err := c.redisCache.Get(key)
 
-	// Fallback to Redis cache
-	value, err := c.redisCache.Get(key)
+	if value1 == value2 {
+		return value1, err
+	}
 	if err != nil {
 		return nil, err
 	}
-
-	// Update in-memory cache
-	c.inMemoryCache.Set(key, value, time.Duration(0))
-	return value, nil
+	return value2, nil
 }
 
 func (c *MultiCache) GetAll() (map[string]interface{}, error) {
@@ -53,14 +51,13 @@ func (c *MultiCache) GetAll() (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	// Update in-memory cache with all values from Redis
-	for key, value := range redisValues {
-		c.inMemoryCache.Set(key, value, time.Duration(0))
-	}
-
 	// Get all from in-memory cache
 	inMemoryValues := c.inMemoryCache.GetAll()
 
+	// Check if redisValues and inMemoryValues are the same
+	if reflect.DeepEqual(redisValues, inMemoryValues) {
+		return inMemoryValues, nil
+	}
 	return inMemoryValues, nil
 }
 
@@ -82,4 +79,10 @@ func (c *MultiCache) DeleteAll() error {
 		return err
 	}
 	return nil
+}
+
+func (c *MultiCache) EvictFromBothCaches(key string) {
+	// Evict key from both caches
+	c.inMemoryCache.Delete(key)
+	c.redisCache.Delete(key)
 }
