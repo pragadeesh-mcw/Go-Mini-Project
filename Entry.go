@@ -1,4 +1,4 @@
-package GoMiniProject
+package cache
 
 import (
 	"log"
