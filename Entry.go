@@ -1,8 +1,6 @@
 package cache
 
 import (
-	"log"
-
 	api "github.com/pragadeesh-mcw/Go-Mini-Project/api_handler"
 
 	"github.com/pragadeesh-mcw/Go-Mini-Project/in_memory"
@@ -29,19 +27,6 @@ func Entry() *GinEngines {
 
 	r := gin.Default()
 	api.SetupUnifiedRoutes(multiCache)
-
-	// Run servers concurrently
-	go func() {
-		if err := r.Run(":8080"); err != nil {
-			log.Fatalf("Failed to run server on :8080: %v", err)
-		}
-	}()
-
-	go func() {
-		if err := r1.Run(":8081"); err != nil {
-			log.Fatalf("Failed to run server on :8081: %v", err)
-		}
-	}()
 
 	return &GinEngines{
 		R:  r,
