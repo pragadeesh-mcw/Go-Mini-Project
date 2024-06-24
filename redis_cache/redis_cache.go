@@ -100,17 +100,10 @@ func (c *RedisCache) Delete(key string) error {
 	c.Client.LRem(ctx, "cache_keys", 0, key) //Remove element from list
 	return nil
 }
-
 func (c *RedisCache) DeleteAll() error {
-	keys, err := c.Client.LRange(ctx, "cache_keys", 0, -1).Result()
+	_, err := c.Client.FlushAll(ctx).Result()
 	if err != nil {
 		return err
 	}
-
-	for _, key := range keys {
-		c.Client.Del(ctx, key)
-	}
-
-	c.Client.Del(ctx, "cache_keys") //delete entire list
 	return nil
 }

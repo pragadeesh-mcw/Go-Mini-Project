@@ -31,12 +31,11 @@ func (c *MultiCache) Set(key string, value interface{}, ttl time.Duration) error
 }
 
 func (c *MultiCache) Get(key string) (interface{}, error) {
-	// Try to get from in-memory cache first
 	value1, _ := c.inMemoryCache.Get(key)
 	value2, err := c.redisCache.Get(key)
 
 	if value1 == value2 {
-		return value1, err
+		return value2, err
 	}
 	if err != nil {
 		return nil, err
@@ -81,8 +80,8 @@ func (c *MultiCache) DeleteAll() error {
 	return nil
 }
 
-func (c *MultiCache) EvictFromBothCaches(key string) {
-	// Evict key from both caches
-	c.inMemoryCache.Delete(key)
-	c.redisCache.Delete(key)
-}
+// func (c *MultiCache) EvictFromBothCaches(key string) {
+// 	// Evict key from both caches
+// 	c.inMemoryCache.Delete(key)
+// 	c.redisCache.Delete(key)
+// }
