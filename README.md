@@ -89,7 +89,7 @@ The same operations can be performed individually for redis and in-memory cache 
 ## Benchmarking
 To benchmark the performance of the LRU cache:
 1.  Run the benchmark tests:
-    `go test -bench=.`
+    `go test -bench . -benchtime=1s -benchmem`
 1.  The results will show the performance of different operations in the cache.
 
 ## Testing
