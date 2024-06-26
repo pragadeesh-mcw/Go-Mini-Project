@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	api "unified/api_handler"
 	"unified/in_memory"
@@ -11,9 +12,13 @@ import (
 )
 
 func main() {
+	//set max capacity
+	var maxCacheCapacity int
+	flag.IntVar(&maxCacheCapacity, "cache-capacity", 3, "Maximum capacity of the cache")
+	flag.Parse()
 	//initiate redis and in-memory
-	inMemoryCache := in_memory.NewLRUCache(3, 60)
-	redisCache := redis_cache.NewCache("localhost:6379", "", 0, 3)
+	inMemoryCache := in_memory.NewLRUCache(maxCacheCapacity, 60)
+	redisCache := redis_cache.NewCache("localhost:6379", "", 0, maxCacheCapacity)
 	multiCache := multicache.NewMultiCache(inMemoryCache, redisCache)
 	//setup unified api
 	r1 := gin.Default()

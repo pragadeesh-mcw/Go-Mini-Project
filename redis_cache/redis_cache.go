@@ -24,7 +24,7 @@ func NewCache(addr string, password string, db int, maxSize int) *RedisCache {
 		Password: password,
 		DB:       db,
 	})
-
+	rdb.FlushDB(ctx)
 	return &RedisCache{
 		Client:  rdb,
 		MaxSize: maxSize,
@@ -32,58 +32,58 @@ func NewCache(addr string, password string, db int, maxSize int) *RedisCache {
 }
 
 // REDIS LRU OPERATION METHODS
-func (c *RedisCache) Set(key string, value interface{}, ttl time.Duration) error {
+func (rc *RedisCache) Set(key string, value interface{}, ttl time.Duration) error {
 	if key == "" {
 		return errors.New("key cannot be empty")
 	}
 	if ttl == 0 {
 		return errors.New("ttl cannot be zero")
 	}
-	err := c.Client.Set(ctx, key, value, ttl).Err()
+	err := rc.Client.Set(ctx, key, value, ttl).Err()
 	if err != nil {
 		return err
 	}
 
-	c.updateAccessOrder(key)    //Maintain LRU Order
-	return c.evictIfNecessary() //perform LRU eviction if more than size
+	rc.updateAccessOrder(key)    //Maintain LRU Order
+	return rc.evictIfNecessary() //perform LRU eviction if more than size
 }
 
-func (c *RedisCache) Get(key string) (string, error) {
-	val, err := c.Client.Get(ctx, key).Result()
+func (rc *RedisCache) Get(key string) (string, error) {
+	val, err := rc.Client.Get(ctx, key).Result()
 	if err != nil {
 		return "", err
 	}
 
-	c.updateAccessOrder(key)
+	rc.updateAccessOrder(key)
 	return val, nil
 }
 
-func (c *RedisCache) updateAccessOrder(key string) {
+func (rc *RedisCache) updateAccessOrder(key string) {
 	// remove and readd to maintain LRU order
-	c.Client.LRem(ctx, "cache_keys", 0, key)
-	c.Client.LPush(ctx, "cache_keys", key)
+	rc.Client.LRem(ctx, "cache_keys", 0, key)
+	rc.Client.LPush(ctx, "cache_keys", key)
 }
-func (c *RedisCache) evictIfNecessary() error {
-	size := c.Client.LLen(ctx, "cache_keys").Val() //Redis List length, val return int64
-	if size > int64(c.MaxSize) {                   //
-		excess := size - int64(c.MaxSize)
+func (rc *RedisCache) evictIfNecessary() error {
+	size := rc.Client.LLen(ctx, "cache_keys").Val() //Redis List length, val return int64
+	if size > int64(rc.MaxSize) {                   //
+		excess := size - int64(rc.MaxSize)
 		for i := int64(0); i < excess; i++ {
-			key := c.Client.RPop(ctx, "cache_keys").Val()
-			c.Client.Del(ctx, key)
+			key := rc.Client.RPop(ctx, "cache_keys").Val()
+			rc.Client.Del(ctx, key)
 		}
 	}
 	return nil
 }
 
-func (c *RedisCache) GetAll() (map[string]string, error) {
-	keys, err := c.Client.LRange(ctx, "cache_keys", 0, -1).Result() //get all elements from list
+func (rc *RedisCache) GetAll() (map[string]interface{}, error) {
+	keys, err := rc.Client.LRange(ctx, "cache_keys", 0, -1).Result() //get all elements from list
 	if err != nil {
 		return nil, err
 	}
 
-	values := make(map[string]string)
+	values := make(map[string]interface{})
 	for _, key := range keys {
-		val, err := c.Client.Get(ctx, key).Result() //returns the value for the specific key
+		val, err := rc.Client.Get(ctx, key).Result() //returns the value for the specific key
 		if err != nil {
 			continue
 		}
@@ -92,16 +92,16 @@ func (c *RedisCache) GetAll() (map[string]string, error) {
 	return values, nil
 }
 
-func (c *RedisCache) Delete(key string) error {
-	err := c.Client.Del(ctx, key).Err()
+func (rc *RedisCache) Delete(key string) error {
+	err := rc.Client.Del(ctx, key).Err()
 	if err != nil {
 		return err
 	}
-	c.Client.LRem(ctx, "cache_keys", 0, key) //Remove element from list
+	rc.Client.LRem(ctx, "cache_keys", 0, key) //Remove element from list
 	return nil
 }
-func (c *RedisCache) DeleteAll() error {
-	_, err := c.Client.FlushAll(ctx).Result()
+func (rc *RedisCache) DeleteAll() error {
+	_, err := rc.Client.FlushAll(ctx).Result()
 	if err != nil {
 		return err
 	}
